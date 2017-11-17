@@ -1,9 +1,10 @@
 #include "CircleActor.h"
+#include "MeshShapeFunctionLibrary.h"
 
 AMSCircleActor::AMSCircleActor()
 {
 	Radius = 100.0f;
-	Segments = 32;
+	Segments = 128;
 }
 
 void AMSCircleActor::Update()
@@ -11,27 +12,34 @@ void AMSCircleActor::Update()
 	FillMesh->ClearMeshSection(0);
 	StrokeMesh->ClearMeshSection(0);
 
-	if (Fill.bEnabled)
+	TArray<FVector> Vertices;
+	if (Fill.bEnabled || Stroke.bEnabled)
 	{
-		float Step = 2.0f / Segments;
-		TArray<FVector> Vertices;
+		float Step = (PI * 2.0f) / Segments;
 		Vertices.Add(FVector::ZeroVector);
 		for (auto i = 0; i < Segments; i++)
 		{
-			FVector Vertex; 
-			Vertex.X = FMath::Cos(i * Step);
-			Vertex.Y = FMath::Sin(i * Step);
+			FVector Vertex;
+			Vertex.X = Radius * FMath::Cos(i * Step);
+			Vertex.Y = Radius * FMath::Sin(i * Step);
 			Vertex.Z = 0.0f;
 			Vertices.Add(Vertex);
 		}
+	}
 
+	if (Fill.bEnabled)
+	{
 		TArray<int32> Triangles;
 		for (auto i = 1; i < Segments; i++)
 		{
 			Triangles.Add(0);
-			Triangles.Add(i);
 			Triangles.Add(i + 1);
+			Triangles.Add(i);
 		}
+
+		Triangles.Add(0);
+		Triangles.Add(1);
+		Triangles.Add(Segments);
 
 		TArray<FVector> Normals;
 		Normals.Init(FVector::UpVector, Vertices.Num());
@@ -51,6 +59,14 @@ void AMSCircleActor::Update()
 
 	if (Stroke.bEnabled)
 	{
+		TArray<FVector> StrokePathVertices = Vertices;
+		StrokePathVertices.RemoveAt(0, 1, true);
 
+		TArray<FVector> StrokeVertices;
+		TArray<int32> Indices;
+		UMeshShapeFunctionLibrary::StrokePath(Vertices, Stroke.Thickness, true, StrokeVertices, Indices);
+
+		for (auto i = 0; i < StrokeVertices.Num(); i++)
+			DrawDebugSphere(GetWorld(), StrokeVertices[i], 1.0f, 16, FColor::Red, false, 50.0f);
 	}
 }

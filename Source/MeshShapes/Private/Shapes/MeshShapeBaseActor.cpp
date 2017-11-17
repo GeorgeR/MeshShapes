@@ -15,13 +15,6 @@ AMeshShapeBaseActor::AMeshShapeBaseActor()
 	Fill.bEnabled = true;
 }
 
-void AMeshShapeBaseActor::PostInitProperties()
-{
-	Super::PostInitProperties();
-
-	Update();
-}
-
 #if WITH_EDITOR
 void AMeshShapeBaseActor::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
 {
@@ -30,3 +23,10 @@ void AMeshShapeBaseActor::PostEditChangeChainProperty(struct FPropertyChangedCha
 	Update();
 }
 #endif
+
+void AMeshShapeBaseActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	Update();
+}

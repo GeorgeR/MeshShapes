@@ -48,9 +48,9 @@ public:
 
 	virtual void Update() { };
 
-	virtual void PostInitProperties() override;
-
 #if WITH_EDITOR
 	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
 #endif
+
+	virtual void OnConstruction(const FTransform& Transform) override;
 };
