@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "RuntimeMeshCore.h"
+#include "RuntimeMeshComponent.h"
 
 #include "MeshData.generated.h"
 
@@ -27,11 +27,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FColor> Colors;
 
-	UPROPERTY(BlueprintReadOnly)
 	TArray<FRuntimeMeshTangent> Tangents;
 
 	void Fill(int32 Count);
 
 	void CreateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, bool bCreateCollision = false, EUpdateFrequency InUpdateFrequency = EUpdateFrequency::Infrequent);
-	void UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, EUpdateFrequency InUpdateFrequency);
+	void UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, ESectionUpdateFlags InUpdateFlags);
 };

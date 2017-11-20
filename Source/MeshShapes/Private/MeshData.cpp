@@ -12,10 +12,11 @@ void FMeshData::Fill(int32 Count)
 
 void FMeshData::CreateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, bool bCreateCollision, EUpdateFrequency InUpdateFrequency)
 {
-	InMesh->CreateMeshSection(InSection, Vertices, TextureCoordinateIndex, Normals, UVs, Colors, Tangents, bCreateCollision, InUpdateFrequency);
+	InMesh->CreateMeshSection(InSection, Vertices, Indices, Normals, UVs, Colors, Tangents, bCreateCollision, InUpdateFrequency);
 }
 
-void FMeshData::UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, EUpdateFrequency InUpdateFrequency)
+void FMeshData::UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, ESectionUpdateFlags InUpdateFlags)
 {
-	InMesh->UpdateMeshSection(InSection, Vertices, Indices, InUpdateFrequency);
+	// TODO
+	//InMesh->UpdateMeshSection<FVector>(InSection, Vertices, Indices, Normals, UVs, Colors, Tangents, InUpdateFlags);
 }

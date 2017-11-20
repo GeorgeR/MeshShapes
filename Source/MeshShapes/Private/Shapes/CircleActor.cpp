@@ -18,7 +18,7 @@ void AMSCircleActor::Update()
 		
 		UMeshShapeFunctionLibrary::CreateCircle(Radius, Segments, FillMeshData);
 		
-		FillMeshData.CreateMeshSection(FillMesh, 0);
+		//FillMeshData.CreateMeshSection(FillMesh, 0);
 		if(Fill.Material != nullptr) FillMesh->SetMaterial(0, Fill.Material);
 	}
 

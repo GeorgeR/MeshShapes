@@ -92,6 +92,11 @@ void UMeshShapeFunctionLibrary::StrokePath(TArray<FVector>& InPoints, float& InT
 
 		OutData.Vertices.Add(Left);
 		OutData.Vertices.Add(Right);
+
+		//FColor PositionColor(ThisPoint.X, ThisPoint.Y, ThisPoint.Z);
+
+		//OutData.Colors.Add(PositionColor); // Encode center in vertex color
+		//OutData.Colors.Add(PositionColor);
 	}
 }
 
@@ -146,7 +151,12 @@ void UMeshShapeFunctionLibrary::Triangulate(FMeshData& InOutData, ETriangulation
 					for (auto j = 0; j < 3; j++)
 					{
 						FClipSMVertex Vertex = Triangle.Vertices[j];
-						InOutData.Indices.Add(ClipVertices.IndexOfByKey(Vertex));
+						for(auto k = 0; k < ClipVertices.Num(); k++)
+							if (ClipVertices[k].Pos == Vertex.Pos)
+							{
+								InOutData.Indices.Add(k);
+								break;
+							}
 					}
 				}
 			}
