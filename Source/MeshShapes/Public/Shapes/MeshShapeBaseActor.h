@@ -4,26 +4,13 @@
 #include "GameFramework/Actor.h"
 #include "RuntimeMeshComponent.h"
 
+#include "CircleComponent.h"
+#include "NGonComponent.h"
+#include "PolygonComponent.h"
+#include "RectangleComponent.h"
+#include "SquareComponent.h"
+
 #include "MeshShapeBaseActor.generated.h"
-
-USTRUCT(BlueprintType)
-struct MESHSHAPES_API FMSBrush
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	bool bEnabled;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	UMaterialInterface* Material;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FLinearColor Color;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float Thickness;
-};
 
 UCLASS(Abstract, HideCategories = (Input, HLOD))
 class MESHSHAPES_API AMeshShapeBaseActor 
@@ -34,23 +21,77 @@ class MESHSHAPES_API AMeshShapeBaseActor
 public:
 	AMeshShapeBaseActor();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape")
-	FMSBrush Fill;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape")
-	FMSBrush Stroke;
-
-	UPROPERTY(BlueprintReadOnly)
-	URuntimeMeshComponent* FillMesh;
-
-	UPROPERTY(BlueprintReadOnly)
-	URuntimeMeshComponent* StrokeMesh;
-
-	virtual void Update() { };
-
 #if WITH_EDITOR
-	virtual void PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent) override;
+	virtual bool GetReferencedContentObjects(TArray<UObject *>& Objects) const override;
 #endif
 
-	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual UMeshShapeBaseComponent* GetShapeComponent() const { return nullptr; }
+};
+
+UCLASS(BlueprintType, ComponentWrapperClass)
+class MESHSHAPES_API AMSCircleActor
+	: public AMeshShapeBaseActor
+{
+	GENERATED_BODY()
+
+public:
+	AMSCircleActor();
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
+
+private:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape", meta = (AllowPrivateAccess = "true"))
+	UMSCircleComponent* Shape;
+};
+
+UCLASS(BlueprintType)
+class MESHSHAPES_API AMSNGonActor
+	: public AMeshShapeBaseActor
+{
+	GENERATED_BODY()
+
+public:
+	AMSNGonActor();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UMSNGonComponent* Shape;
+};
+
+UCLASS(BlueprintType)
+class MESHSHAPES_API AMSPolygonActor
+	: public AMeshShapeBaseActor
+{
+	GENERATED_BODY()
+
+public:
+	AMSPolygonActor();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UMSPolygonComponent* Shape;
+};
+
+UCLASS(BlueprintType)
+class MESHSHAPES_API AMSRectangleActor
+	: public AMeshShapeBaseActor
+{
+	GENERATED_BODY()
+
+public:
+	AMSRectangleActor();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UMSRectangleComponent* Shape;
+};
+
+UCLASS(BlueprintType)
+class MESHSHAPES_API AMSSquareActor
+	: public AMeshShapeBaseActor
+{
+	GENERATED_BODY()
+
+public:
+	AMSSquareActor();
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UMSSquareComponent* Shape;
 };

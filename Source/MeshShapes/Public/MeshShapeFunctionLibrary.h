@@ -46,7 +46,7 @@ public:
 	static void StrokePath(TArray<FVector>& InPoints, float& InThickness, bool bClosed, FMeshData& OutData);
 
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
-	static void Triangulate(FMeshData& InOutData, ETriangulationMethod InMethod, bool bFlip = false);
+	static void Triangulate(FMeshData& InOutData, ETriangulationMethod InMethod, bool bClosed = false, bool bFlip = false);
 
 private:
 	static FVector LineLineIntersect(FVector InA, FVector InVecA, FVector InB, FVector InVecB);

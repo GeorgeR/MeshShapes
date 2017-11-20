@@ -1,18 +1,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Shapes/MeshShapeBaseActor.h"
+#include "MeshShapeBaseComponent.h"
 
-#include "CircleActor.generated.h"
+#include "CircleComponent.generated.h"
 
-UCLASS(meta = (DisplayName = "CircleShape"))
-class MESHSHAPES_API AMSCircleActor 
-	: public AMeshShapeBaseActor
+UCLASS(BlueprintType)
+class MESHSHAPES_API UMSCircleComponent 
+	: public UMeshShapeBaseComponent
 {
 	GENERATED_BODY()
 
 public:
-	AMSCircleActor();
+	UMSCircleComponent();
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape")
 	float Radius;

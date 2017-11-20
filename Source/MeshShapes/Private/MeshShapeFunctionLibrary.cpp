@@ -6,7 +6,7 @@ void UMeshShapeFunctionLibrary::CreateCircle(float InRadius, int32 InSegments, F
 	CreateCircleVertices(InRadius, InSegments, OutData.Vertices);
 	OutData.Fill(OutData.Vertices.Num());
 
-	Triangulate(OutData, ETriangulationMethod::Fan);
+	Triangulate(OutData, ETriangulationMethod::Fan, true);
 }
 
 void UMeshShapeFunctionLibrary::CreateCircleVertices(float InRadius, int32 InSegments, TArray<FVector>& OutVertices)
@@ -37,7 +37,7 @@ void UMeshShapeFunctionLibrary::CreateRectangle(float InWidth, float InHeight, F
 	CreateRectangleVertices(InWidth, InHeight, OutData.Vertices);
 	OutData.Fill(OutData.Vertices.Num());
 
-	Triangulate(OutData, ETriangulationMethod::EarClipping);
+	Triangulate(OutData, ETriangulationMethod::Grid);
 }
 
 void UMeshShapeFunctionLibrary::CreateRectangleVertices(float InWidth, float InHeight, TArray<FVector>& OutVertices)
@@ -47,10 +47,10 @@ void UMeshShapeFunctionLibrary::CreateRectangleVertices(float InWidth, float InH
 	float HalfWidth = InWidth * 0.5f;
 	float HalfHeight = InHeight * 0.5f;
 
-	OutVertices.Add(FVector(-HalfWidth, +HalfHeight, 0.0f));
-	OutVertices.Add(FVector(+HalfWidth, +HalfHeight, 0.0f));
 	OutVertices.Add(FVector(-HalfWidth, -HalfHeight, 0.0f));
 	OutVertices.Add(FVector(+HalfWidth, -HalfHeight, 0.0f));
+	OutVertices.Add(FVector(-HalfWidth, +HalfHeight, 0.0f));
+	OutVertices.Add(FVector(+HalfWidth, +HalfHeight, 0.0f));
 }
 
 void UMeshShapeFunctionLibrary::UpdateRectangle(float InWidth, float InHeight, FMeshData& InOutData)
@@ -69,6 +69,9 @@ void UMeshShapeFunctionLibrary::CreatePolygon(TArray<FVector> InVertices, FMeshD
 void UMeshShapeFunctionLibrary::StrokePath(TArray<FVector>& InPoints, float& InThickness, bool bClosed /*= true*/, FMeshData& OutData)
 {
 	float HalfThickness = InThickness * 0.5f;
+
+	FVector Min = InPoints[0];
+	FVector Max = InPoints[0];
 
 	for (auto i = 0; i < InPoints.Num(); i++)
 	{
@@ -90,17 +93,39 @@ void UMeshShapeFunctionLibrary::StrokePath(TArray<FVector>& InPoints, float& InT
 		FVector Left = LineLineIntersect(PreviousLeftFirst, PreviousDirection, NextLeftFirst, NextDirection);
 		FVector Right = LineLineIntersect(PreviousRightFirst, PreviousDirection, NextRightFirst, NextDirection);
 
+		Min = Min.ComponentMin(Left);
+		Min = Min.ComponentMin(Right);
+		
+		Max = Max.ComponentMax(Left);
+		Max = Max.ComponentMax(Right);
+
 		OutData.Vertices.Add(Left);
 		OutData.Vertices.Add(Right);
-
-		//FColor PositionColor(ThisPoint.X, ThisPoint.Y, ThisPoint.Z);
-
-		//OutData.Colors.Add(PositionColor); // Encode center in vertex color
-		//OutData.Colors.Add(PositionColor);
 	}
+
+	FVector OneOverExtents = FVector(1.0f) / (Max - Min);
+
+	TFunction<FColor(FVector&)> NormalizePosition = [&](FVector& Position) -> FColor {
+		FVector Result = (Position - Min) * OneOverExtents;
+		return FColor(
+			(uint8)FMath::FloorToInt(Result.X * 255), 
+			(uint8)FMath::FloorToInt(Result.Y * 255), 
+			(uint8)FMath::FloorToInt(Result.Z * 255));
+	};
+
+	for (auto i = 0; i < InPoints.Num(); i++)
+	{
+		FColor NormalizedPosition = NormalizePosition(InPoints[i]);
+		OutData.Colors.Add(NormalizedPosition); // Encode center in vertex color
+		OutData.Colors.Add(NormalizedPosition);
+	}
+
+	Triangulate(OutData, ETriangulationMethod::Grid, bClosed);
+
+	OutData.Fill(OutData.Vertices.Num());
 }
 
-void UMeshShapeFunctionLibrary::Triangulate(FMeshData& InOutData, ETriangulationMethod InMethod, bool bFlip /*= false*/)
+void UMeshShapeFunctionLibrary::Triangulate(FMeshData& InOutData, ETriangulationMethod InMethod, bool bClosed, bool bFlip /*= false*/)
 {
 	InOutData.Indices.Empty();
 
@@ -115,18 +140,39 @@ void UMeshShapeFunctionLibrary::Triangulate(FMeshData& InOutData, ETriangulation
 			for (auto i = 1; i < InOutData.Vertices.Num(); i++)
 			{
 				InOutData.Indices.Add(0);
-				InOutData.Indices.Add(0);
 				InOutData.Indices.Add(i + 1);
 				InOutData.Indices.Add(i);
 			}
 
-			InOutData.Indices.Add(0);
-			InOutData.Indices.Add(1);
-			InOutData.Indices.Add(InOutData.Vertices.Num() - 1);
+			if (bClosed)
+			{
+				InOutData.Indices.Add(0);
+				InOutData.Indices.Add(1);
+				InOutData.Indices.Add(InOutData.Vertices.Num() - 1);
+			}
 		}
 		else if (InMethod == ETriangulationMethod::Grid)
 		{
+			for (auto i = 0; i < InOutData.Vertices.Num() - 2; i += 2)
+			{
+				InOutData.Indices.Add(i + 0);
+				InOutData.Indices.Add(i + 2);
+				InOutData.Indices.Add(i + 1);
+				InOutData.Indices.Add(i + 1);
+				InOutData.Indices.Add(i + 2);
+				InOutData.Indices.Add(i + 3);
+			}
 
+			if (bClosed)
+			{
+				int32 SecondLastVertexIndex = InOutData.Vertices.Num() - 2;
+				InOutData.Indices.Add(SecondLastVertexIndex);
+				InOutData.Indices.Add(0);
+				InOutData.Indices.Add(SecondLastVertexIndex + 1);
+				InOutData.Indices.Add(SecondLastVertexIndex + 1);
+				InOutData.Indices.Add(0);
+				InOutData.Indices.Add(1);
+			}
 		}
 		else if (InMethod == ETriangulationMethod::EarClipping)
 		{

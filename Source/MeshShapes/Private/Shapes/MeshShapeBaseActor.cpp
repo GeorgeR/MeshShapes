@@ -1,32 +1,53 @@
 #include "MeshShapeBaseActor.h"
+#include "MeshShapeBaseComponent.h"
 
 AMeshShapeBaseActor::AMeshShapeBaseActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	//RootComponent = CreateDefaultSubobject<UMeshShapeBaseComponent>(TEXT("Root"));
+}
 
-	FillMesh = CreateDefaultSubobject<URuntimeMeshComponent>(TEXT("FillMesh"));
-	FillMesh->SetupAttachment(RootComponent);
+AMSCircleActor::AMSCircleActor()
+{
+	RootComponent = CreateDefaultSubobject<UMSCircleComponent>(TEXT("Shape"));
+}
 
-	StrokeMesh = CreateDefaultSubobject<URuntimeMeshComponent>(TEXT("StrokeMesh"));
-	StrokeMesh->SetupAttachment(RootComponent);
+AMSNGonActor::AMSNGonActor()
+{
+	RootComponent = CreateDefaultSubobject<UMSNGonComponent>(TEXT("Shape"));
+}
 
-	Fill.bEnabled = true;
+AMSPolygonActor::AMSPolygonActor()
+{
+	RootComponent = CreateDefaultSubobject<UMSPolygonComponent>(TEXT("Shape"));
+}
+
+AMSRectangleActor::AMSRectangleActor()
+{
+	RootComponent = CreateDefaultSubobject<UMSRectangleComponent>(TEXT("Shape"));
+}
+
+AMSSquareActor::AMSSquareActor()
+{
+	RootComponent = CreateDefaultSubobject<UMSSquareComponent>(TEXT("Squad"));
 }
 
 #if WITH_EDITOR
-void AMeshShapeBaseActor::PostEditChangeChainProperty(struct FPropertyChangedChainEvent& PropertyChangedEvent)
+bool AMeshShapeBaseActor::GetReferencedContentObjects(TArray<UObject *>& Objects) const
 {
-	Super::PostEditChangeChainProperty(PropertyChangedEvent);
+	Super::GetReferencedContentObjects(Objects);
 
-	Update();
+	UMeshShapeBaseComponent* MeshShape = GetShapeComponent();
+	Objects.Add(MeshShape->FillMesh);
+	Objects.Add(MeshShape->StrokeMesh);
+
+	if (MeshShape->Fill.Material != nullptr)
+		Objects.Add(MeshShape->Fill.Material);
+
+	if (MeshShape->Stroke.Material != nullptr)
+		Objects.Add(MeshShape->Stroke.Material);
+
+	return true;
 }
 #endif
-
-void AMeshShapeBaseActor::OnConstruction(const FTransform& Transform)
-{
-	Super::OnConstruction(Transform);
-
-	Update();
-}

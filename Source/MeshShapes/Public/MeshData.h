@@ -31,6 +31,6 @@ public:
 
 	void Fill(int32 Count);
 
-	void CreateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, bool bCreateCollision = false, EUpdateFrequency InUpdateFrequency = EUpdateFrequency::Infrequent);
-	void UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection, ESectionUpdateFlags InUpdateFlags);
+	void CreateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection = 0, bool bCreateCollision = false, EUpdateFrequency InUpdateFrequency = EUpdateFrequency::Infrequent);
+	void UpdateMeshSection(URuntimeMeshComponent* InMesh, int32 InSection = 0, ESectionUpdateFlags InUpdateFlags = ESectionUpdateFlags::None);
 };
