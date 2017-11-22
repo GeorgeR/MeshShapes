@@ -10,27 +10,27 @@ AMeshShapeBaseActor::AMeshShapeBaseActor()
 
 AMSCircleActor::AMSCircleActor()
 {
-	RootComponent = CreateDefaultSubobject<UMSCircleComponent>(TEXT("Shape"));
+	RootComponent = Shape = CreateDefaultSubobject<UMSCircleComponent>(TEXT("Shape"));
 }
 
 AMSNGonActor::AMSNGonActor()
 {
-	RootComponent = CreateDefaultSubobject<UMSNGonComponent>(TEXT("Shape"));
+	RootComponent = Shape = CreateDefaultSubobject<UMSNGonComponent>(TEXT("Shape"));
 }
 
 AMSPolygonActor::AMSPolygonActor()
 {
-	RootComponent = CreateDefaultSubobject<UMSPolygonComponent>(TEXT("Shape"));
+	RootComponent = Shape = CreateDefaultSubobject<UMSPolygonComponent>(TEXT("Shape"));
 }
 
 AMSRectangleActor::AMSRectangleActor()
 {
-	RootComponent = CreateDefaultSubobject<UMSRectangleComponent>(TEXT("Shape"));
+	RootComponent = Shape = CreateDefaultSubobject<UMSRectangleComponent>(TEXT("Shape"));
 }
 
 AMSSquareActor::AMSSquareActor()
 {
-	RootComponent = CreateDefaultSubobject<UMSSquareComponent>(TEXT("Squad"));
+	RootComponent = Shape = CreateDefaultSubobject<UMSSquareComponent>(TEXT("Squad"));
 }
 
 #if WITH_EDITOR

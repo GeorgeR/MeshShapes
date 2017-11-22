@@ -20,6 +20,7 @@ public class MeshShapes : ModuleRules
 			new string[]
 			{
 				"Core",
+			    "RuntimeMeshComponent",
             });
 
 		PrivateDependencyModuleNames.AddRange(
@@ -36,5 +37,8 @@ public class MeshShapes : ModuleRules
 			new string[]
 			{
 			});
-	}
+
+	    if (Target.bBuildEditor == true)
+	        PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd" });
+    }
 }

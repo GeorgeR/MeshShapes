@@ -37,11 +37,10 @@ class MESHSHAPES_API AMSCircleActor
 public:
 	AMSCircleActor();
 
-	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
-
-private:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	UMSCircleComponent* Shape;
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
 };
 
 UCLASS(BlueprintType)
@@ -55,6 +54,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	UMSNGonComponent* Shape;
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
 };
 
 UCLASS(BlueprintType)
@@ -68,6 +69,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	UMSPolygonComponent* Shape;
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
 };
 
 UCLASS(BlueprintType)
@@ -81,6 +84,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	UMSRectangleComponent* Shape;
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
 };
 
 UCLASS(BlueprintType)
@@ -94,4 +99,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	UMSSquareComponent* Shape;
+
+	inline virtual UMeshShapeBaseComponent* GetShapeComponent() const { return Shape; }
 };
