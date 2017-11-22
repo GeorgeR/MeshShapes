@@ -5,7 +5,7 @@
 
 #include "CircleComponent.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, meta = (BlueprintSpawnableComponent))
 class MESHSHAPES_API UMSCircleComponent 
 	: public UMeshShapeBaseComponent
 {

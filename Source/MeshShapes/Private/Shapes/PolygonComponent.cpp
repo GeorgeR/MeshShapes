@@ -20,8 +20,11 @@ void UMSPolygonComponent::Update()
 	FillMesh->ClearMeshSection(0);
 	StrokeMesh->ClearMeshSection(0);
 
+	if (Points.Num() <= 1)
+		return;
+
 	FMeshData FillMeshData;
-	if (Fill.bEnabled && bClosed)
+	if (Fill.bEnabled && bClosed && Points.Num() > 2)
 	{
 		UMeshShapeFunctionLibrary::CreatePolygon(Points, FillMeshData);
 		
@@ -29,7 +32,7 @@ void UMSPolygonComponent::Update()
 		if (Fill.Material != nullptr) FillMesh->SetMaterial(0, Fill.Material);
 	}
 
-	if (Stroke.bEnabled)
+	if (Stroke.bEnabled && Points.Num() > 1)
 	{
 		TArray<FVector> StrokePathVertices;
 		if (FillMeshData.Vertices.Num() > 0)

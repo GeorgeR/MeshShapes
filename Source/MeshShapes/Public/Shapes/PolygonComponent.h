@@ -5,7 +5,7 @@
 
 #include "PolygonComponent.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, meta = (BlueprintSpawnableComponent))
 class MESHSHAPES_API UMSPolygonComponent 
 	: public UMeshShapeBaseComponent
 {

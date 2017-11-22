@@ -32,6 +32,23 @@ void UMeshShapeFunctionLibrary::UpdateCircle(float InRadius, FMeshData& InOutDat
 	CreateCircleVertices(InRadius, Segments, InOutData.Vertices);
 }
 
+void UMeshShapeFunctionLibrary::CreateArc(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, bool bWedge, FMeshData& OutData)
+{
+	if (bWedge)
+		OutData.Vertices.Add(FVector::ZeroVector);
+
+	CreateArcVertices(InRadius, InSegments, InStartAngle, InEndAngle, OutData.Vertices);
+	OutData.Fill(OutData.Vertices.Num());
+
+	Triangulate(OutData, ETriangulationMethod::Fan, true);
+}
+
+void UMeshShapeFunctionLibrary::CreateArcVertices(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, TArray<FVector>& OutVertices)
+{
+	float Step = (PI * 2.0f) / InSegments;
+	// TODO
+}
+
 void UMeshShapeFunctionLibrary::CreateRectangle(float InWidth, float InHeight, FMeshData& OutData)
 {
 	CreateRectangleVertices(InWidth, InHeight, OutData.Vertices);
@@ -90,9 +107,19 @@ void UMeshShapeFunctionLibrary::StrokePath(TArray<FVector>& InPoints, float& InT
 		FVector NextLeftFirst = ThisPoint + (-NextRightDirection * HalfThickness);
 		FVector NextRightFirst = ThisPoint + (NextRightDirection * HalfThickness);
 
-		FVector Left = LineLineIntersect(PreviousLeftFirst, PreviousDirection, NextLeftFirst, NextDirection);
-		FVector Right = LineLineIntersect(PreviousRightFirst, PreviousDirection, NextRightFirst, NextDirection);
-
+		FVector Left(0);
+		FVector Right(0);
+		if (!bClosed && (i == 0 || i == InPoints.Num() - 1))
+		{
+			Left = NextLeftFirst;
+			Right = NextRightFirst;
+		}
+		else
+		{
+			Left = LineLineIntersect(PreviousLeftFirst, PreviousDirection, NextLeftFirst, NextDirection);
+			Right = LineLineIntersect(PreviousRightFirst, PreviousDirection, NextRightFirst, NextDirection);
+		}
+		
 		Min = Min.ComponentMin(Left);
 		Min = Min.ComponentMin(Right);
 		

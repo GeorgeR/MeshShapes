@@ -5,7 +5,7 @@
 
 #include "RectangleComponent.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, meta = (BlueprintSpawnableComponent))
 class MESHSHAPES_API UMSRectangleComponent 
 	: public UMeshShapeBaseComponent
 {

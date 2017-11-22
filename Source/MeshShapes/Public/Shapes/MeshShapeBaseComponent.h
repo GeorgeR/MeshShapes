@@ -25,7 +25,7 @@ public:
 	float Thickness;
 };
 
-UCLASS(ClassGroup=(MeshShape), meta=(BlueprintSpawnableComponent), HideCategories = (Input))
+UCLASS(HideCategories = (Input))
 class MESHSHAPES_API UMeshShapeBaseComponent 
 	: public USceneComponent
 {

@@ -31,6 +31,12 @@ public:
 	static void UpdateCircle(float InRadius, FMeshData& InOutData);
 
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
+	static void CreateArc(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, bool bWedge, FMeshData& OutData);
+
+	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
+	static void CreateArcVertices(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, TArray<FVector>& OutVertices);
+
+	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
 	static void CreateRectangle(float InWidth, float InHeight, FMeshData& OutData);
 
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")

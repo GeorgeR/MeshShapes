@@ -5,7 +5,7 @@
 
 #include "SquareComponent.generated.h"
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, meta = (BlueprintSpawnableComponent))
 class MESHSHAPES_API UMSSquareComponent 
 	: public UMeshShapeBaseComponent
 {

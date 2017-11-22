@@ -12,8 +12,8 @@ UMeshShapeBaseComponent::UMeshShapeBaseComponent()
 	StrokeMesh->SetupAttachment(this);
 	StrokeMesh->AddLocalOffset(FVector(0, 0, 1));
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialObject(TEXT("Material'/MeshShapes/M_Solid.M_Solid'"));
-	SolidMaterial = MaterialObject.Object;
+	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialObject(TEXT("Material'/MeshShapes/M_Solid.M_Solid'"));
+	//SolidMaterial = MaterialObject.Object;
 
 	Fill.bEnabled = true;
 	Fill.Color = FLinearColor::White;
