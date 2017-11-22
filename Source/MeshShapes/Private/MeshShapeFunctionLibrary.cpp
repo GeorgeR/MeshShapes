@@ -111,8 +111,17 @@ void UMeshShapeFunctionLibrary::StrokePath(TArray<FVector>& InPoints, float& InT
 		FVector Right(0);
 		if (!bClosed && (i == 0 || i == InPoints.Num() - 1))
 		{
-			Left = NextLeftFirst;
-			Right = NextRightFirst;
+			// NOTE: I don't know why I have to do this
+			if (i == InPoints.Num() - 1)
+			{
+				Left = NextRightFirst;
+				Right = NextLeftFirst;
+			}
+			else 
+			{
+				Left = NextLeftFirst;
+				Right = NextRightFirst;
+			}
 		}
 		else
 		{

@@ -28,7 +28,7 @@ public:
 	virtual UMeshShapeBaseComponent* GetShapeComponent() const { return nullptr; }
 };
 
-UCLASS(BlueprintType, ComponentWrapperClass)
+UCLASS(BlueprintType)
 class MESHSHAPES_API AMSCircleActor
 	: public AMeshShapeBaseActor
 {
