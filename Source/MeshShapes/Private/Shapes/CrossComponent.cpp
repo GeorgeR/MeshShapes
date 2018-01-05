@@ -84,6 +84,7 @@ void UMSCrossComponent::Update()
 
 		FillMeshData.Vertices = Vertices;
 		FillMeshData.Indices = Indices;
+		UMeshShapeFunctionLibrary::CreateUVFit(Vertices, FillMeshData.UVs);
 		FillMeshData.Fill(FillMeshData.Vertices.Num());
 
 		FillMeshData.CreateMeshSection(FillMesh);

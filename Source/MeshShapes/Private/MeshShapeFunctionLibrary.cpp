@@ -249,6 +249,36 @@ void UMeshShapeFunctionLibrary::Triangulate(FMeshData& InOutData, ETriangulation
 		Algo::Reverse(InOutData.Indices);
 }
 
+void UMeshShapeFunctionLibrary::CreateUVFit(TArray<FVector>& InVertices, TArray<FVector2D>& OutUVs)
+{
+	FBox2D Bounds;
+	GetBounds(InVertices, Bounds);
+
+	FVector2D OneOverBoundsSize = Bounds.GetSize();
+	OneOverBoundsSize = FVector2D(1.0f / OneOverBoundsSize.X, 1.0f / OneOverBoundsSize.Y);
+
+	for (auto i = 0; i < InVertices.Num(); i++)
+	{
+		FVector2D Vertex2D = FVector2D(InVertices[i].Y - Bounds.Min.X, -InVertices[i].X - Bounds.Min.Y);
+		Vertex2D *= OneOverBoundsSize;
+		OutUVs.Add(Vertex2D);
+	}
+}
+
+void UMeshShapeFunctionLibrary::GetBounds(TArray<FVector>& InVertices, FBox2D& OutBounds)
+{
+	FVector2D Min(FLT_MAX, FLT_MAX);
+	FVector2D Max(FLT_MIN, FLT_MIN);
+	for (auto i = 0; i < InVertices.Num(); i++)
+	{
+		FVector Vertex = InVertices[i];
+		Min = FVector2D(FMath::Min(Min.X, Vertex.X), FMath::Min(Min.Y, Vertex.Y));
+		Max = FVector2D(FMath::Max(Max.X, Vertex.X), FMath::Max(Max.Y, Vertex.Y));
+	}
+
+	OutBounds = FBox2D(Min, Max);
+}
+
 FVector UMeshShapeFunctionLibrary::LineLineIntersect(FVector InA, FVector InVecA, FVector InB, FVector InVecB)
 {
 	FVector C = InB - InA;

@@ -29,5 +29,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape")
 	float HeadOffset;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Shape")
+	bool bDoubleEnded;
+
 	virtual void Update() override;
 };

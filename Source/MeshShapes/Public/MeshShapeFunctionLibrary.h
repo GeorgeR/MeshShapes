@@ -30,9 +30,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
 	static void UpdateCircle(float InRadius, FMeshData& InOutData);
 
+	/** WIP **/
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
 	static void CreateArc(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, bool bWedge, FMeshData& OutData);
 
+	/** WIP **/
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
 	static void CreateArcVertices(float InRadius, int32 InSegments, float InStartAngle, float InEndAngle, TArray<FVector>& OutVertices);
 
@@ -53,6 +55,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
 	static void Triangulate(FMeshData& InOutData, ETriangulationMethod InMethod, bool bClosed = false, bool bFlip = false);
+
+	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
+	static void CreateUVFit(TArray<FVector>& InVertices, TArray<FVector2D>& OutUVs);
+
+	UFUNCTION(BlueprintCallable, Category = "MeshShapes")
+	static void GetBounds(TArray<FVector>& InVertices, FBox2D& OutBounds);
 
 private:
 	static FVector LineLineIntersect(FVector InA, FVector InVecA, FVector InB, FVector InVecB);
